@@ -1,0 +1,127 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Flight {
+    String flightNumber;
+    String destination;
+    int seatsAvailable;
+
+    public Flight(String flightNumber, String destination, int seatsAvailable) {
+        this.flightNumber = flightNumber;
+        this.destination = destination;
+        this.seatsAvailable = seatsAvailable;
+    }
+
+    public void bookSeat() {
+        if (seatsAvailable > 0) {
+            seatsAvailable--;
+            System.out.println("Seat booked successfully on Flight " + flightNumber);
+        } else {
+            System.out.println("Sorry, no seats available on Flight " + flightNumber);
+        }
+    }
+
+    public void cancelSeat() {
+        seatsAvailable++;
+        System.out.println("Seat cancellation successful on Flight " + flightNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "Flight " + flightNumber + " to " + destination + " (" + seatsAvailable + " seats available)";
+    }
+}
+
+class AirlineManagementSystem {
+    ArrayList<Flight> flights;
+
+    public AirlineManagementSystem() {
+        flights = new ArrayList<>();
+    }
+
+    public void addFlight(String flightNumber, String destination, int seatsAvailable) {
+        Flight newFlight = new Flight(flightNumber, destination, seatsAvailable);
+        flights.add(newFlight);
+        System.out.println("Flight added: " + newFlight);
+    }
+
+    public void viewFlights() {
+        if (flights.isEmpty()) {
+            System.out.println("No flights available.");
+        } else {
+            for (Flight flight : flights) {
+                System.out.println(flight);
+            }
+        }
+    }
+
+    public void bookFlight(String flightNumber) {
+        for (Flight flight : flights) {
+            if (flight.flightNumber.equals(flightNumber)) {
+                flight.bookSeat();
+                return;
+            }
+        }
+        System.out.println("Flight not found!");
+    }
+
+    public void cancelFlight(String flightNumber) {
+        for (Flight flight : flights) {
+            if (flight.flightNumber.equals(flightNumber)) {
+                flight.cancelSeat();
+                return;
+            }
+        }
+        System.out.println("Flight not found!");
+    }
+}
+
+public class AirlineSystem {
+    public static void main(String[] args) {
+        AirlineManagementSystem system = new AirlineManagementSystem();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n1. Add Flight\n2. View Flights\n3. Book Flight\n4. Cancel Flight\n5. Exit");
+            System.out.print("Choose an option: ");
+            int option = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+
+            switch (option) {
+                case 1:
+                    System.out.print("Enter flight number: ");
+                    String flightNumber = scanner.nextLine();
+                    System.out.print("Enter destination: ");
+                    String destination = scanner.nextLine();
+                    System.out.print("Enter available seats: ");
+                    int seats = scanner.nextInt();
+                    system.addFlight(flightNumber, destination, seats);
+                    break;
+
+                case 2:
+                    system.viewFlights();
+                    break;
+
+                case 3:
+                    System.out.print("Enter flight number to book: ");
+                    String bookFlightNumber = scanner.nextLine();
+                    system.bookFlight(bookFlightNumber);
+                    break;
+
+                case 4:
+                    System.out.print("Enter flight number to cancel: ");
+                    String cancelFlightNumber = scanner.nextLine();
+                    system.cancelFlight(cancelFlightNumber);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting system.");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+}
